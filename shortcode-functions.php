@@ -2,12 +2,13 @@
 function recent_posts_function($atts, $content = null) {
     extract(shortcode_atts(array(
         'posts' => 1,
+        'cat' => ''
     ), $atts));
         
     $return_string = '<h3>'.$content.'</h3>';
     $return_string .= '<ul>';
     
-    query_posts(array('orderby' => 'date', 'order' => 'DESC' , 'showposts' => $posts ));
+    query_posts(array('orderby' => 'date', 'order' => 'DESC' ,  'category_name' => $cat, 'showposts' => $posts ));
     if (have_posts()) : while (have_posts()) : the_post();
         $return_string .= '<li><a href="'.get_permalink().'">' .get_the_title().'</a></li>';
         endwhile;
