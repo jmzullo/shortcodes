@@ -1,22 +1,18 @@
 <?php
 function recent_posts_function($atts, $content = null) {
     extract(shortcode_atts(array(
-        'posts' => 1,
+        'num' => 1,
         'cat' => ''
     ), $atts));
-        
-    $return_string = '<h3>'.$content.'</h3>';
-    $return_string .= '<ul>';
+    global $post;
     
-    query_posts(array('orderby' => 'date', 'order' => 'DESC' ,  'category_name' => $cat, 'showposts' => $posts ));
-    if (have_posts()) : while (have_posts()) : the_post();
-        $return_string .= '<li><a href="'.get_permalink().'">' .get_the_title().'</a></li>';
-        endwhile;
-    endif;
-    $return_string .= '</ul>';
-    
-    wp_reset_query();
-    return $return_string;
+    $myposts = get_posts('numberposts='.$num.'&order=DESC&orderby=post_date&category_name='.$cat);
+    $retour='<ul>';
+    foreach($myposts as $post) : setup_postdata($post);
+    $retour.='<li><a href="'.get_permalink().'">'.the_title("", "", false).'</a></li>';
+endforeach;
+$retour.='</ul>';
+return $retour;
 }
 
 function register_shortcodes(){
